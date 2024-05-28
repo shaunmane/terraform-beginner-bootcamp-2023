@@ -1,4 +1,4 @@
-# Terraform Beginner Bootcamp 2023 - Week 0
+# Terraform Beginner Bootcamp 2023 - Week 0 :cloud:
 
 The purpose of week0 is to prepare for the upcoming project.
 
@@ -10,7 +10,7 @@ The purpose of week0 is to prepare for the upcoming project.
 - [Semantic Versioning](#semantic-versioning)
 
 
-## Semantic Versioning 
+## Semantic Versioning
 
 This project uses semantic versioning for its tagging. 
 [semver](https://semver.org/)
