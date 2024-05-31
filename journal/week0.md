@@ -11,7 +11,11 @@ The purpose of week0 is to prepare for the upcoming project.
 - [Refactor Terraform CLI](#refactor-terraform-cli)
     - [Considerations with the Terraform CLI changes](#considerations-with-the-terraform-cli-changes)
     - [Refactoring to Bash Scripts](#refactoring-to-bash-scripts)
-        
+        - [Shebang Considerations](#shebang-considerations)
+        - [Linux Permissions Considerations](#linux-permissions-considerations)
+        - [Gitpod Lifecycle](#gitpod-lifecycle-before-init-command)
+-         
+
 
 
 
@@ -36,7 +40,7 @@ First you will need to find out what Linux distribution you're using. This will 
 
 To view the distribution, run this command:
 
-```
+```sh
 $ cat /etc/os-release
 ```
 
@@ -75,7 +79,7 @@ This bash script is located here: [./bin/install_terraform_cli](./bin/install_te
 
 This simplified the setup from:
 
-```
+```yaml
 init: |
     sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
     curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
@@ -85,12 +89,12 @@ init: |
 
 To this:
 
-```
+```yaml
 init: |
     source ./bin/install_terraform_cli
 ```
 
-#### Shebang
+#### Shebang Considerations
 
 A [Shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) `#!` (pronounced Sha-bang) tells the bash script what program that will interpet the script. eg. `#!/bin/bash`
 
@@ -101,7 +105,45 @@ ChatGPT recommends this format for bash: `#!/usr/bin/env bash`
 
 When executing a bash script, we can use the shorthand notation `./` to execute the bash script. 
 
+If we are using a script in `.gitpod.yml` we need to pount the script to a program to interpret it.
+
+e.g. `source ./bin/install_terraform_cli`
+
+#### Linux Permissions Considerations
+
+In order to make our bash scripts executable we need to change linux permissions for the file to be executable at the user mode.
+
+```sh
+chmod u+x ./bin/install_terraform_cli
+```
+
+Alternatively:
+
+```sh
+chmod 744 ./bin/install_terraform_cli
+```
+
+[Chmod](https://en.wikipedia.org/wiki/Chmod)
+
+#### Gitpod Lifecycle (Before, Init, Command)
+
+We need to be careful when using the Init because it will not rerun if we restart an existing workspace.
+
+| Scenario                          | Initialization   |
+|-----------------------------------|------------------|
+| When starting a new workspace     | `init`           |
+| Launching an existing workspace   | No `init`        |
+
+**Solution:**
+
+Use either the `before` or `command` directive as shown below:
+
+
+```yaml
+before: |
+     source ./bin/install_terraform_cli
+```
 
 [Gitpod Lifecycle](https://www.gitpod.io/docs/configure/workspaces/tasks)
 
-[Chmod](https://en.wikipedia.org/wiki/Chmod)
+
