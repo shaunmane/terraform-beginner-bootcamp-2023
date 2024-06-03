@@ -14,9 +14,12 @@ The purpose of week0 is to prepare for the upcoming project.
         - [Shebang Considerations](#shebang-considerations)
         - [Linux Permissions Considerations](#linux-permissions-considerations)
         - [Gitpod Lifecycle](#gitpod-lifecycle-before-init-command)
--         
-
-
+- [Environment Variables](#environment-variables)
+    - [Env Var Command](#env-command)
+    - [Setting and Unsetting Env Vars](#setting-and-unsetting-env-vars)
+    - [Printing Env Vars](#printing-env-vars)
+    - [Scoping op Env Vars](#scoping-of-env-vars)
+    - [Persisting Env Vars in Gitpod](#persisting-env-vars-in-gitpod)
 
 
 
@@ -146,4 +149,52 @@ before: |
 
 [Gitpod Lifecycle](https://www.gitpod.io/docs/configure/workspaces/tasks)
 
+## Environment Variables
 
+### Env Command
+
+We can list out all Environment Variables (Env Var) using the `env` command.
+
+We can filter specific env vars using the grep e.g. `env | grep AWS_`
+
+### Setting and Unsetting Env Vars
+
+In the terminal we can set an env var using `export HELLO='world'`
+
+In the terminal we can unset the env var using `unset HELLO`
+
+We can set an env var temporarily when just running a command
+
+```sh
+HELLO='world' .bin/print_message
+```
+
+Within a bash script we can set env without writing export e.g. 
+
+```sh
+#!/user/bin/env bash
+
+HELLO='world'
+
+echo $HELLO
+```
+
+### Printing Env Vars
+
+We can print an env var using echo e.g. `echo $HELLO`
+
+### Scoping of Env Vars
+
+When you open up a new terminal in VSCode, it will not be aware of env vars that you have ste in another window.
+
+If you want the Env Vars to persist across all future bash terminals that are open, you need to set env vars in your bash profile. e.g. `.bash_profile`
+
+### Persisting Env Vars in Gitpod
+
+We can persist env vars into gitpod by storing them in Gitpod Secret Storage.
+
+```sh
+gp env HELLO='world'
+```
+
+All future workspaces launched will set the env vars for all bash terminals opened in those workspaces
