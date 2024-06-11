@@ -20,7 +20,8 @@ The purpose of week0 is to prepare for the upcoming project.
     - [Printing Env Vars](#printing-env-vars)
     - [Scoping op Env Vars](#scoping-of-env-vars)
     - [Persisting Env Vars in Gitpod](#persisting-env-vars-in-gitpod)
-
+- [Refactor AWS CLI](#refactor-aws-cli)
+    - [AWS CLI Installation](#aws-cli-installation)
 
 
 ## Semantic Versioning
@@ -198,3 +199,65 @@ gp env HELLO='world'
 ```
 
 All future workspaces launched will set the env vars for all bash terminals opened in those workspaces
+
+## Refactor AWS CLI
+
+In order to simplify our setup for the AWS CLI Installation, we will update the environment variable to match the previously established one in the [`gitpod.yml`](.gitpod.yml) file. 
+
+This is how these commands are initially executed in Gitpod:
+```yaml
+before: |
+  cd /workspace
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  unzip awscliv2.zip
+  sudo ./aws/install
+  cd $THEIA_WORKSPACE_ROOT
+```
+
+Now, instead of duplicating this code in various places, we can simply reference our newly created script like this:
+
+```yaml
+before: |
+  source .bin/install_aws_cli
+```
+
+This approach not only simplifies our workflow but also ensures consistency and ease of maintenance.
+
+The AWS CLI Installation commands are stored in the bash script - [`./bin/install_aws_cli`](./bin/install_aws_cli)
+
+### AWS CLI Installation
+
+[AWS CLI Getting Started Install](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) | [AWS CLI Env Vars](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html)
+
+We can check if our AWS credentials is configured correctly by running the following command:
+
+```sh
+aws sts get-caller-identity
+```
+
+To set env vars, use the following commands:
+
+```sh
+export AWS_ACCESS_KEY_ID='AKIAIOSFODNN7EXAMPLE'
+export AWS_SECRET_ACCESS_KEY='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
+export AWS_DEFAULT_REGION='us-west-2'
+```
+
+To set env vars in Gitpod:
+
+```sh
+gp env AWS_ACCESS_KEY_ID='AKIAIOSFODNN7EXAMPLE'
+gp env AWS_SECRET_ACCESS_KEY='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
+gp env AWS_DEFAULT_REGION='us-west-2'
+```
+
+If it is succesful, you should see a JSON payload return that looks like this:
+
+```json
+{
+    "UserId": "AIEAVUO15ZPVHJ5WIJ5KR",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/terraform-beginner-bootcamp"
+}
+```
+
