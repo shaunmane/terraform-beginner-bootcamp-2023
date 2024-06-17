@@ -314,7 +314,7 @@ If we want to automatically approve an apply, we can provide the auto approve fl
 
 This will destroy resources.
 
-You can also use the auto approve flag to skip the approve prompt e.g. `terraform apply --auto-approve`
+You can also use the auto approve flag to skip the approve prompt e.g. `terraform destroy --auto-approve`
 
 
 #### Terraform Lock Files
