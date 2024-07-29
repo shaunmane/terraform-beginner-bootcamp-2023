@@ -19,7 +19,7 @@ PROJECT_ROOT
 
 ## Terraform and Input Variables
 
-[`Terraform Input Variables`](https://developer.hashicorp.com/terraform/language/values/variables)
+[Terraform Input Variables](https://developer.hashicorp.com/terraform/language/values/variables)
 
 ### Terraform Cloud Variables
 
@@ -36,7 +36,7 @@ We can set Terraform Cloud variables to be sensitive so that they are not shown 
 We can use the `-var` flag to set an input variable on the command line or override a variable in the tfvars: 
 
 ```sh
-terraform -var user_uuid="my-user_id"
+$terraform -var user_uuid="my-user_id"
 ```
 
 ### Var-file flag
@@ -44,7 +44,7 @@ terraform -var user_uuid="my-user_id"
 To set lots of variables, it is more convenient to specify their values in a variable definitions file (with a filename ending in either `.tfvars`or `.tfvars.json`) and then specify that file on the command line with `-var-file`:
 
 ```sh
-terraform apply -var-file="testing.tfvars"
+$terraform apply -var-file="testing.tfvars"
 ```
 
 ### terraform.tfvars
@@ -63,3 +63,29 @@ Terraform loads variables in the following order, with later sources taking prec
 - The `terraform.tfvars.json` file, if present.
 - Any `*.auto.tfvars` or `*.auto.tfvars.json` files, processed in lexical order of their filenames.
 - Any `-var` and `-var-file` options on the command line, in the order they are provided. (This includes variables set by an HCP Terraform workspace.)
+
+## Dealing with Configuration Drift
+
+## What happens if we lose our state file?
+
+If you lose your statefile, you most likely have to tear down all your cloud infrastructure manually.
+
+You can use terraform import but it won't work for all cloud resources. You need check the terraform providers documentation for which resources support import.
+
+### Fix Missing Resources with Terraform Import
+
+`Terraform import` is a command that allows you to import existing resources into your terraform configuration. This command will create a new state file with the existing resources.
+
+
+```sh
+$terraform import aws_s3_bucket.bucket bucket-name
+```
+
+[Terraform Import](https://developer.hashicorp.com/terraform/cli/import)
+[AWS S3 Bucket Import](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#import)
+
+### Fix Manual Configuration
+
+If someone goes and deletes or modifies cloud resources manually through Clickops.
+
+By running Terraform plan, we attempt to put our infrastructure back into expected state fixing Configuration Drift
