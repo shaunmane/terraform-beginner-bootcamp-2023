@@ -89,3 +89,44 @@ $terraform import aws_s3_bucket.bucket bucket-name
 If someone goes and deletes or modifies cloud resources manually through Clickops.
 
 By running Terraform plan, we attempt to put our infrastructure back into expected state fixing Configuration Drift
+
+### Fix Using Terraform Refresh
+
+```sh
+$terraform apply -refresh-only -auto-approve
+```
+
+## Terraform Modules
+
+### Terraform Module Structure
+
+It is recommended to place modes in a `modules` directory when locally developing modules but you can name it whatever you like.
+
+### Passing Input Variables
+
+We can pass input variables to our module.
+
+The module has to declare the terraform variables in its own variables.tf
+
+```json
+module "terrahouse_aws" {
+  source = "./modules/terrahouse_aws"
+  user_uuid = var.user_uuid
+  bucket_name = var.bucket_name
+}
+```
+
+### Module Sources
+
+Using the source, we can import the module from various places e.g. 
+- Locally
+- Github
+- Terraform Registry
+
+```json
+module "terrahouse_aws" {
+  source = "./modules/terrahouse_aws"
+}
+```
+
+[Module Sources](https://developer.hashicorp.com/terraform/language/modules/sources) 
