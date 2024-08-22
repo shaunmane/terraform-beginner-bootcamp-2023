@@ -1,5 +1,30 @@
 # Terraform Beginner Bootcamp 2023 - Week 1 
 
+## Fixing Tags
+
+[How to Delete local and remote tags on Git](https://devconnected.com/how-to-delete-local-and-remote-tags-on-git/)
+
+Locally delete a tag
+
+```sh
+$ git tag -d <tag_name>
+```
+
+Remotely delete a tag
+
+```sh
+$ git push --delete origin tagname
+```
+
+Checkout the commit that you want to retag by grabbing the `sha` from your Github history.
+
+```sh
+$ git checkout <SHA>
+$ git tag M.M.P
+$ git push --tags
+$ git checkout main
+```
+
 ## Root Module Structure 
 
 Our root module structure is as follows:
@@ -36,7 +61,7 @@ We can set Terraform Cloud variables to be sensitive so that they are not shown 
 We can use the `-var` flag to set an input variable on the command line or override a variable in the tfvars: 
 
 ```sh
-$terraform -var user_uuid="my-user_id"
+$ terraform -var user_uuid="my-user_id"
 ```
 
 ### Var-file flag
@@ -44,7 +69,7 @@ $terraform -var user_uuid="my-user_id"
 To set lots of variables, it is more convenient to specify their values in a variable definitions file (with a filename ending in either `.tfvars`or `.tfvars.json`) and then specify that file on the command line with `-var-file`:
 
 ```sh
-$terraform apply -var-file="testing.tfvars"
+$ terraform apply -var-file="testing.tfvars"
 ```
 
 ### terraform.tfvars
@@ -78,7 +103,7 @@ You can use terraform import but it won't work for all cloud resources. You need
 
 
 ```sh
-$terraform import aws_s3_bucket.bucket bucket-name
+$ terraform import aws_s3_bucket.bucket bucket-name
 ```
 
 [Terraform Import](https://developer.hashicorp.com/terraform/cli/import)
@@ -93,7 +118,7 @@ By running Terraform plan, we attempt to put our infrastructure back into expect
 ### Fix Using Terraform Refresh
 
 ```sh
-$terraform apply -refresh-only -auto-approve
+$ terraform apply -refresh-only -auto-approve
 ```
 
 ## Terraform Modules
