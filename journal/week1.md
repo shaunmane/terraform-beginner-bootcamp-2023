@@ -108,7 +108,7 @@ We can pass input variables to our module.
 
 The module has to declare the terraform variables in its own variables.tf
 
-```json
+```tf
 module "terrahouse_aws" {
   source = "./modules/terrahouse_aws"
   user_uuid = var.user_uuid
@@ -123,10 +123,62 @@ Using the source, we can import the module from various places e.g.
 - Github
 - Terraform Registry
 
-```json
+```tf
 module "terrahouse_aws" {
   source = "./modules/terrahouse_aws"
 }
 ```
 
 [Module Sources](https://developer.hashicorp.com/terraform/language/modules/sources) 
+
+## Considerations when using ChatGPT to write Terraform 
+
+LLMs such as ChatGPT may not be trained on the latest documentation of information about Terraform. 
+
+It may likely produce older examples that could be deprecated. Often affecting providers.
+
+[S3 Bucket Upload deprecated](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/s3_bucket_object)
+
+## Working with files in Terraform
+
+### Fileexists function
+
+This is a built in Terraform function to check the existance of a file.
+
+```tf 
+condition = fileexists(var.index_html_filepath)
+```
+
+[Fileexists](https://developer.hashicorp.com/terraform/language/functions/fileexists)
+
+### Filemd5
+
+The filemd5 function in Terraform calculates the MD5 hash of a file’s contents. This can be useful for various purposes, such as detecting changes to a file or ensuring that a file's content has not been altered.
+
+```tf
+resource "local_file" "index_html" {
+  content  = file(var.index_html_filepath)
+  filename = "index.html"
+  
+  # Use filemd5 to detect changes
+  md5      = filemd5(var.index_html_filepath)
+}
+```
+
+[Filemd5](https://developer.hashicorp.com/terraform/language/functions/filemd5)
+
+### Path Variable
+
+In Terraform, there is a special variable called `path` that allows us to reference local paths:
+- path.module = get the path for the current module
+- path.root = get the path for the root module
+
+[Special Path Variable](https://developer.hashicorp.com/terraform/language/expressions/references#filesystem-and-workspace-info)
+
+```tf
+resource "aws_s3_object" "website_index" {
+  bucket = aws_s3_bucket.website_bucket.bucket
+  key    = "index.html"
+  source = "${path.root}/public/index.html"
+}
+```
