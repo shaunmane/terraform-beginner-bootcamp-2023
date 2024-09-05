@@ -31,6 +31,10 @@ resource "aws_s3_object" "website_index" {
   content_type = "text/html"
 
   etag = filemd5(var.index_html_filepath)    # to track changes in the file
+  lifecycle {
+    replace_triggered_by = [terraform_data.content_version.output]
+    ignore_changes = [etag]
+  }
 }
 
 resource "aws_s3_object" "website_error" {
@@ -39,6 +43,9 @@ resource "aws_s3_object" "website_error" {
   source = var.error_html_filepath 
 
   etag = filemd5(var.error_html_filepath)    # to track changes in the file
+  lifecycle {
+    ignore_changes = [etag]
+  }
 }
 
 resource "aws_s3_bucket_policy" "bucket_policy" {
@@ -62,4 +69,8 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
         }
     }
   })
+}
+
+resource "terraform_data" "content_version" {
+ input = var.content_version 
 }
