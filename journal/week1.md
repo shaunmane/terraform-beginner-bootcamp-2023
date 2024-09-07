@@ -255,3 +255,71 @@ We use the jsonencode to create the json policy inline in the hcl.
 Plain data values such as Local Values and Input Variables don't have any side-effects to plan against and so they aren't valid in `replace_triggered_by`. You can use `terraform_data`'s behavior of planning an action each time `input` changes to indirectly use a plain value to trigger replacement.
 
 [Terraform_Data](https://developer.hashicorp.com/terraform/language/resources/terraform-data)
+
+## Provisioners
+
+Provisioners allow you to execute commands on compute instances for actions e.g. a AWS CLI command. 
+
+They are not recommended for use by Hashicorp because Configuration Management tools such as Ansible are a better fit, but the functionality exists.
+
+[Terraform Provisioners](https://developer.hashicorp.com/terraform/language/resources/provisioners/syntax)
+
+### Local-exec
+
+This will execute a command on the machine running the terraform command e.g. plan apply
+
+```tf
+resource "aws_instance" "web" {
+  # ...
+
+  provisioner "local-exec" {
+    command = "echo ${self.private_ip} >> private_ips.txt"
+  }
+}
+```
+
+[Local Execute](https://developer.hashicorp.com/terraform/language/resources/provisioners/local-exec)
+
+### Remote-exec
+
+This will execute commands on a machine which you target. You will need to provide credentials such as `SSH` to get into the machine.
+
+```tf
+resource "aws_instance" "web" {
+  # ...
+
+  # Establishes connection to be used by all
+  # generic remote provisioners (i.e. file/remote-exec)
+  connection {
+    type     = "ssh"
+    user     = "root"
+    password = var.root_password
+    host     = self.public_ip
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "puppet apply",
+      "consul join ${aws_instance.web.private_ip}",
+    ]
+  }
+}
+```
+
+[Remote Execute](https://developer.hashicorp.com/terraform/language/resources/provisioners/remote-exec)
+
+### Heredoc Strings
+
+A heredoc (here document) string is a way of defining multi-line string literals in programming languages and configuration files. It's particularly useful when you need to include large blocks of text, such as configuration files, SQL queries, or JSON data, without having to escape newlines or quotation marks.
+
+In Terraform, heredoc strings are represented using the `<<EOF` syntax (or similar delimiters). This syntax allows you to write a block of text without needing to escape special characters, and it automatically preserves newlines.
+
+```tf
+<<COMMAND
+aws cloudfront create-invalidation \
+--distribution-id ${aws_cloudfront_distribution.s3_distribution.id} \
+--paths '/*'
+    COMMAND
+```
+
+[Heredocs](https://developer.hashicorp.com/terraform/language/expressions/strings#heredoc-strings)
