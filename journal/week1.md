@@ -323,3 +323,38 @@ aws cloudfront create-invalidation \
 ```
 
 [Heredocs](https://developer.hashicorp.com/terraform/language/expressions/strings#heredoc-strings)
+
+## For Each Expressions
+
+For each allows us to enumerate over complex data types.
+
+```sh
+[for s in var.list : upper(s)]
+```
+
+This is mostly useful when you are creating multiples of a cloud resource and you want to reduce the amount of repetitive Terraform code.
+
+```tf
+resource "aws_iam_user" "the-accounts" {
+  for_each = toset(["Todd", "James", "Alice", "Dottie"])
+  name     = each.key
+}
+```
+
+[For Each Expressions](https://developer.hashicorp.com/terraform/language/meta-arguments/for_each)
+
+### Fileset Function 
+
+This is used for enumerating a set of regular file names given a path and pattern. The path is automatically removed from the resulting set of file names and any result still containing path separators always returns forward slash (`/`) as the path separator for cross-system compatibility.
+
+Takes two arguments - `fileset(path, pattern)`
+
+```tf
+resource "example_thing" "example" {
+  for_each = fileset(path.module, "files/*")
+
+  # other configuration using each.value
+}
+```
+
+[fileset Function](https://developer.hashicorp.com/terraform/language/functions/fileset)
