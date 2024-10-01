@@ -1,6 +1,7 @@
 # Terraform Beginner Bootcamp 2023 - Week 2
 
-![architectural-diagram](https://github.com/shaunmane/terraform-beginner-bootcamp-2023/journal/Untitled Diagram.drawio(1).png)
+![Provider Physical Diagram](Diagram.drawio(1).png)
+
 
 ## Working with Ruby
 
