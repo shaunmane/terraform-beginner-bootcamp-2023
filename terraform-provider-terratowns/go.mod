@@ -6,12 +6,17 @@ toolchain go1.23.1
 
 replace github.com/ExamProCo/terraform-provider-terratwons => /workspace/terraform-beginner-bootcamp-2023/terraform-provider-terratowns
 
+require github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
+
 require (
+<<<<<<< HEAD
 	github.com/google/uuid v1.6.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.34.0
 )
 
 require (
+=======
+>>>>>>> main
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/fatih/color v1.17.0 // indirect
