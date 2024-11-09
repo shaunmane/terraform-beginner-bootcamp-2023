@@ -8,15 +8,15 @@ variable "user_uuid" {
   }
 }
 
-variable "bucket_name" {
-  description = "The name of the S3 bucket"
-  type = string
-
-  validation {
-    condition = can(regex("^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)$", var.bucket_name)) && length(var.bucket_name) >= 3 && length(var.bucket_name) <= 63
-    error_message = "The bucket name must be between 3 and 63 characters long, only contain lowercase letters, numbers, and hyphens, and must not be formatted as an IP address."
-  }
-}
+#variable "bucket_name" {
+#  description = "The name of the S3 bucket"
+#  type = string
+#
+#  validation {
+#    condition = can(regex("^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)$", var.bucket_name)) && length(var.bucket_name) >= 3 && length(var.bucket_name) <= 63
+#    error_message = "The bucket name must be between 3 and 63 characters long, only contain lowercase letters, numbers, and hyphens, and must not be formatted as an IP address."
+#  }
+#}
 
 variable "index_html_filepath" {
   description = "Path to the index.html file"
